@@ -1,0 +1,9 @@
+import os
+from cerbero.config import Platform, Architecture, Distro, DistroVersion
+prefix='/home/nvidia/gst_build/release'
+target_platform = Platform.DARWIN
+target_distro = Distro.NONE
+target_arch = Architecture.X86_64
+variants = ['nodebug','noalsa','nogtk2','nogtk','nox11', 'nopulse', 'nocdparanoia', 'nosdl',
+            'notestspackage', 'nopython']
+allow_system_libs=False
