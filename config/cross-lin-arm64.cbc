@@ -3,7 +3,7 @@ from cerbero.config import Platform, Architecture, Distro, DistroVersion
 
 prefix='/home/nvidia/gst_build/release'
 target_platform = Platform.LINUX
-target_distro = Distro.DEBIAN
+target_distro = Distro.NONE
 target_arch = Architecture.ARM64
 allow_system_libs = False
 variants = ['nodebug', 'nogtk2', 'nogtk', 'noalsa', 'nox11', 'nopulse', 'nocdparanoia', 'nosdl',

@@ -46,7 +46,7 @@ class DebianBootstrapper (UnixBootstrapper):
 
     tool = 'sudo apt-get install %s'
     packages = ['autotools-dev', 'automake', 'autoconf', 'libtool', 'g++',
-                'autopoint', 'make', 'cmake', 'bison', 'flex', 'yasm',
+                'autopoint', 'make', 'cmake', 'bison', 'flex', 'yasm','nasm',
                 'pkg-config', 'gtk-doc-tools', 'libxv-dev', 'libx11-dev',
                 'libpulse-dev', 'python-dev', 'texinfo', 'gettext',
                 'build-essential', 'pkg-config', 'doxygen', 'curl',
@@ -104,7 +104,7 @@ class DebianBootstrapper (UnixBootstrapper):
 class RedHatBootstrapper (UnixBootstrapper):
 
     packages = ['gcc', 'gcc-c++', 'automake', 'autoconf', 'libtool',
-                'gettext-devel', 'make', 'cmake', 'bison', 'flex', 'yasm',
+                'gettext-devel', 'make', 'cmake', 'bison', 'flex', 'yasm','nasm',
                 'pkgconfig', 'gtk-doc', 'curl', 'doxygen', 'texinfo',
                 'texinfo-tex', 'texlive-dvips', 'docbook-style-xsl',
                 'transfig', 'intltool', 'rpm-build', 'redhat-rpm-config',
@@ -141,7 +141,7 @@ class OpenSuseBootstrapper (UnixBootstrapper):
 
     tool = 'sudo zypper install %s'
     packages = ['gcc', 'automake', 'autoconf', 'gcc-c++', 'libtool',
-            'gettext-tools', 'make', 'cmake', 'bison', 'flex', 'yasm',
+            'gettext-tools', 'make', 'cmake', 'bison', 'flex', 'yasm','nasm',
             'gtk-doc', 'curl', 'doxygen', 'texinfo',
             'texlive', 'docbook-xsl-stylesheets',
             'transfig', 'intltool', 'patterns-openSUSE-devel_rpm_build',
@@ -157,7 +157,7 @@ class ArchBootstrapper (UnixBootstrapper):
     tool = 'sudo pacman -S %s --needed'
     packages = ['intltool', 'cmake', 'doxygen', 'gtk-doc',
             'libtool', 'bison', 'flex', 'automake', 'autoconf', 'make',
-            'curl', 'gettext', 'alsa-lib', 'yasm', 'gperf',
+            'curl', 'gettext', 'alsa-lib', 'yasm','nasm', 'gperf',
             'docbook-xsl', 'transfig', 'libxrender',
             'libxv', 'mesa', 'python2', 'wget', 'glib-networking', 'git',
             'subversion', 'xorg-util-macros']
@@ -184,7 +184,7 @@ class GentooBootstrapper (UnixBootstrapper):
             'sys-devel/bison', 'sys-devel/flex', 'sys-devel/automake',
             'sys-devel/autoconf', 'sys-devel/make', 'net-misc/curl',
             'sys-devel/gettext', 'media-libs/alsa-lib', 'media-sound/pulseaudio',
-            'dev-lang/yasm', 'dev-util/gperf', 'app-text/docbook-xsl-stylesheets',
+            'dev-lang/yasm','dev-lang/nasm',  'dev-util/gperf', 'app-text/docbook-xsl-stylesheets',
             'media-gfx/transfig', 'x11-libs/libXrender', 'x11-libs/libXv',
             'media-libs/mesa', 'net-misc/wget', 'net-libs/glib-networking']
 

@@ -31,7 +31,7 @@ class BuildTools (BootstrapperBase):
     BUILD_TOOLS = ['automake', 'autoconf', 'm4', 'gettext-tools', 'libtool',
                    'pkg-config', 'orc-tool', 'gettext-m4']
     PLAT_BUILD_TOOLS = {
-        Platform.DARWIN: ['intltool', 'yasm', 'bison', 'flex'],
+        Platform.DARWIN: ['intltool', 'yasm', 'nasm','bison', 'flex'],
         Platform.WINDOWS: ['intltool', 'yasm'],
         Platform.LINUX: ['intltool-m4'],
     }
@@ -57,6 +57,7 @@ class BuildTools (BootstrapperBase):
                 self.config.distro_version == DistroVersion.DEBIAN_WHEEZY:
                 # x264 requires yasm >= 1.2
                 self.BUILD_TOOLS.append('yasm')
+                self.BUILD_TOOLS.append('nasm')
             if self.config.distro_version in [DistroVersion.REDHAT_6,
                                               DistroVersion.AMAZON_LINUX]:
                 self.BUILD_TOOLS.append('cmake')

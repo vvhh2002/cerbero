@@ -2,10 +2,10 @@
 
 class Recipe(recipe.Recipe):
     name = 'libunwind'
-    version = '1.1'
+    version = '1.2.1'
     licenses = [License.MIT]
     stype = SourceType.TARBALL
-    url = 'http://download.savannah.gnu.org/releases/libunwind/libunwind-1.1.tar.gz'
+    url = 'http://download.savannah.gnu.org/releases/libunwind/libunwind-1.2.1.tar.gz'
 
     files_libs = ['libunwind']
     files_devel = ['include/libunwind-*.h',
