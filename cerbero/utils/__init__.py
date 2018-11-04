@@ -147,6 +147,8 @@ def system_info():
             arch = Architecture.ARMv7
         elif arch.startswith('arm'):
             arch = Architecture.ARM
+        elif arch.startswith('aarch64'):
+            arch = Architecture.ARM64
         else:
             raise FatalError(_("Architecture %s not supported") % arch)
 
