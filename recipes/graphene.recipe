@@ -21,15 +21,15 @@ GRAPHENE_CONFIG_UNVERSAL='''\
 class Recipe(recipe.Recipe):
     name = 'graphene'
     stype = SourceType.TARBALL
-    version = '1.4.0'
+    version = '1.8.2'
     url = 'https://github.com/ebassi/graphene/archive/{0}.tar.gz'.format(version)
     licenses = [License.MIT]
+    btype = BuildType.MAKEFILE
     # Disable NEON completly, it's broken and experimental   
     # configure_options = ' --enable-static --enable-shared --disable-arm-neon'
     configure_options = ' --enable-static --with-pic --disable-shared --disable-arm-neon'
     deps = ['glib']
 
-    config_sh = 'sh ./autogen.sh'
 
     files_libs = ['libgraphene-1.0']
     files_typelibs = ['Graphene-1.0']
@@ -41,9 +41,12 @@ class Recipe(recipe.Recipe):
         'lib/pkgconfig/graphene-gobject-1.0.pc',
     ]
 
-    patches = ['graphene/0001-simd4f-Fix-a-compilation-error.patch']
+    # patches = ['graphene/0001-simd4f-Fix-a-compilation-error.patch']
 
     def prepare(self):
+        self.make = 'meson  --prefix=%s --buildtype=release --optimization=3 --default-library static intenal_build' % self.config.prefix
+        self.make_install = "ninja -C intenal_build/ install"
+
         if self.config.variants.gi:
             self.deps.append("gobject-introspection")
 
@@ -75,7 +78,8 @@ class Recipe(recipe.Recipe):
                                      'include', arch)
             if not os.path.exists(arch_dir):
                 os.makedirs(arch_dir)
-            shutil.copyfile(os.path.join(self.build_dir, 'src', 'graphene-config.h'),
+            shutil.copyfile(os.path.join(self.config.prefix, 'lib', 'graphene-1.0',
+                                     'include', 'graphene-config.h'),
                         os.path.join(arch_dir, 'graphene-config.h'))
             with open(os.path.join(self.config.prefix, 'lib', 'graphene-1.0',
                                    'include', 'graphene-config.h'), 'w+') as f:
