@@ -16,6 +16,8 @@ class Recipe(recipe.Recipe):
     patches = ['zlib/0001-win32-fix-dll-name.patch',
                'zlib/0001-Fix-test-builds-to-use-the-built-libz-headers-librar.patch']
 
+    configure_options = ' --static '
+
     files_libs = ['libz']
     files_devel = ['include/zlib.h', 'include/zconf.h', 'lib/pkgconfig/zlib.pc']
 
