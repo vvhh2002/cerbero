@@ -1,0 +1,32 @@
+# -*- Mode: Python -*- vi:si:et:sw=4:sts=4:ts=4:syntax=python
+from cerbero.tools.libtool import LibtoolLibrary
+
+
+class Recipe(recipe.Recipe):
+    version = '2.9'
+    name = 'x265'
+    licenses = [License.GPL]
+    stype = SourceType.TARBALL
+    btype = BuildType.CMAKE
+    url = 'https://bitbucket.org/multicoreware/x265/downloads/x265_%(version)s.tar.gz'
+    tarball_dirname = 'x265_%(version)s'
+    configure_options = ' -DENABLE_HDR10_PLUS=OFF -DHIGH_BIT_DEPTH=ON -DCMAKE_CXX_STANDARD=11 -DENABLE_ASSEMBLY=ON -DENABLE_SHARED=OFF '
+    configure_tpl = "%(config-sh)s %(options)s ./source"
+    files_libs = ['libx265']
+    files_bins = ['x265']
+    files_devel = ['lib/pkgconfig/x265.pc', 'include/x265.h',
+                   'include/x265_config.h']
+
+    def prepare(self):
+        # clang x86-32 fails at generating proper asm PIC code
+        # See bug https://bugzilla.gnome.org/show_bug.cgi?id=727079
+        enable_asm = True
+        if self.config.target_platform == Platform.LINUX:
+            self.configure_options += ' -DENABLE_LIBNUMA=ON'
+        else:
+            self.configure_options += ' -DENABLE_LIBNUMA=OFF'
+
+    def post_install(self):
+        libtool_la = LibtoolLibrary('x265', 148, None, None, self.config.libdir,
+                self.config.target_platform)
+        libtool_la.save()

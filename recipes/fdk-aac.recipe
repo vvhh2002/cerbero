@@ -1,0 +1,17 @@
+
+
+
+class Recipe(recipe.Recipe):
+    version = '0.1.6'
+    name = 'fdk-aac'
+    url = 'https://github.com/mstorsjo/fdk-aac/archive/v0.1.6.tar.gz'
+    stype = SourceType.TARBALL
+    config_sh = 'sh ./autogen.sh --noconfigure && ./configure'
+    configure_options = '--enable-static --disable-shared  --with-pic'
+    files_libs = ['libfdk-aac']
+    files_devel = ['lib/pkgconfig/fdk-aac.pc',
+                   'include/fdk-aac/aacdecoder_lib.h',
+                   'include/fdk-aac/aacenc_lib.h',
+                   'include/fdk-aac/FDK_audio.h',
+                   'include/fdk-aac/genricStds.h',
+                   'include/fdk-aac/machine_type.h']
