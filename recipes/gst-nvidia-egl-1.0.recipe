@@ -1,0 +1,41 @@
+# -*- Mode: Python -*- vi:si:et:sw=4:sts=4:ts=4:syntax=python
+
+from cerbero.utils import fix_android_ndk16_cxx
+
+class Recipe(custom.GStreamer):
+    name = 'gstreamer-egl-1.0'
+    config_sh = 'sh ./autogen.sh --noconfigure && ./configure'
+    configure_options = '--enable-static --disable-introspection --disable-examples'
+    url = 'file://../nvidia_l2t_28.2.1/gstomx1_src.tbz2'
+    stype = SourceType.TARBALL
+    deps = ['gstreamer-1.0', 'gst-plugins-base-1.0']
+    use_system_libs = True
+
+    files_libs =['libgstegl-1.0']
+    files_plugins_devel = [
+        'include/gstreamer-1.0/gst/egl',
+        'lib/pkgconfig/gstreamer-egl-1.0.pc',
+    ]
+
+    platform_files_plugins_sys = {
+        Platform.LINUX: [
+             'lib/gstreamer-1.0/libgstnveglglessink%(mext)s',
+            ],
+    }
+    platform_files_plugins_sys_devel = {
+        Platform.LINUX: [
+            'lib/gstreamer-1.0/libgstnveglglessink.a', 'lib/gstreamer-1.0/libgstnveglglessink.la',
+        ],
+    }
+
+    def prepare(self):
+        self.append_env['CFLAGS'] = " -Wno-error "
+        self.append_env['OBJCFLAGS'] = " -Wno-error "
+        self.append_env['CXXFLAGS'] = " -Wno-error "
+        self.append_env['CPPFLAGS'] = " -Wno-error "
+
+        if self.config.target_platform != Platform.LINUX:
+            self.configure_options += ' --disable-gtk-doc '
+        if self.config.variants.nodebug:
+            self.append_env['CFLAGS'] += ' -DGST_LEVEL_MAX=GST_LEVEL_FIXME'
+
