@@ -1,0 +1,264 @@
+From fb15fe4408b38282f1e0dbf4548a51f2d26da347 Mon Sep 17 00:00:00 2001
+From: Victor Ho <drjone@gmail.com>
+Date: Mon, 5 Nov 2018 21:59:57 +0800
+Subject: [PATCH] update to newest version
+
+---
+ source/dynamicHDR10/json11/json11.cpp | 68 ++++++++++++++-------------
+ source/dynamicHDR10/json11/json11.h   | 13 ++---
+ 2 files changed, 40 insertions(+), 41 deletions(-)
+
+diff --git a/source/dynamicHDR10/json11/json11.cpp b/source/dynamicHDR10/json11/json11.cpp
+index 3031fa9..3df4e0c 100644
+--- a/source/dynamicHDR10/json11/json11.cpp
++++ b/source/dynamicHDR10/json11/json11.cpp
+@@ -26,12 +26,6 @@
+ #include <cstdio>
+ #include <limits>
+ 
+-#if _MSC_VER
+-#pragma warning(disable: 4510) //const member cannot be default initialized
+-#pragma warning(disable: 4512) //assignment operator could not be generated
+-#pragma warning(disable: 4610) //const member cannot be default initialized
+-#endif
+-
+ namespace json11 {
+ 
+ static const int max_depth = 200;
+@@ -43,11 +37,20 @@ using std::make_shared;
+ using std::initializer_list;
+ using std::move;
+ 
++/* Helper for representing null - just a do-nothing struct, plus comparison
++ * operators so the helpers in JsonValue work. We can't use nullptr_t because
++ * it may not be orderable.
++ */
++struct NullStruct {
++    bool operator==(NullStruct) const { return true; }
++    bool operator<(NullStruct) const { return false; }
++};
++
+ /* * * * * * * * * * * * * * * * * * * *
+  * Serialization
+  */
+ 
+-static void dump(std::nullptr_t, string &out) {
++static void dump(NullStruct, string &out) {
+     out += "null";
+ }
+ 
+@@ -214,9 +217,9 @@ public:
+     explicit JsonObject(Json::object &&value)      : Value(move(value)) {}
+ };
+ 
+-class JsonNull final : public Value<Json::NUL, std::nullptr_t> {
++class JsonNull final : public Value<Json::NUL, NullStruct> {
+ public:
+-    JsonNull() : Value(nullptr) {}
++    JsonNull() : Value({}) {}
+ };
+ 
+ /* * * * * * * * * * * * * * * * * * * *
+@@ -297,6 +300,8 @@ const Json & JsonArray::operator[] (size_t i) const {
+  */
+ 
+ bool Json::operator== (const Json &other) const {
++    if (m_ptr == other.m_ptr)
++        return true;
+     if (m_ptr->type() != other.m_ptr->type())
+         return false;
+ 
+@@ -304,6 +309,8 @@ bool Json::operator== (const Json &other) const {
+ }
+ 
+ bool Json::operator< (const Json &other) const {
++    if (m_ptr == other.m_ptr)
++        return false;
+     if (m_ptr->type() != other.m_ptr->type())
+         return m_ptr->type() < other.m_ptr->type();
+ 
+@@ -381,16 +388,12 @@ struct JsonParser final {
+       if (str[i] == '/') {
+         i++;
+         if (i == str.size())
+-          return fail("unexpected end of input inside comment", false);
++          return fail("unexpected end of input after start of comment", false);
+         if (str[i] == '/') { // inline comment
+           i++;
+-          if (i == str.size())
+-            return fail("unexpected end of input inside inline comment", false);
+-          // advance until next line
+-          while (str[i] != '\n') {
++          // advance until next line, or end of input
++          while (i < str.size() && str[i] != '\n') {
+             i++;
+-            if (i == str.size())
+-              return fail("unexpected end of input inside inline comment", false);
+           }
+           comment_found = true;
+         }
+@@ -406,9 +409,6 @@ struct JsonParser final {
+                 "unexpected end of input inside multi-line comment", false);
+           }
+           i += 2;
+-          if (i == str.size())
+-            return fail(
+-              "unexpected end of input inside multi-line comment", false);
+           comment_found = true;
+         }
+         else
+@@ -427,6 +427,7 @@ struct JsonParser final {
+         bool comment_found = false;
+         do {
+           comment_found = consume_comment();
++          if (failed) return;
+           consume_whitespace();
+         }
+         while(comment_found);
+@@ -440,8 +441,9 @@ struct JsonParser final {
+      */
+     char get_next_token() {
+         consume_garbage();
++        if (failed) return (char)0;
+         if (i == str.size())
+-            return fail("unexpected end of input", '0');
++            return fail("unexpected end of input", (char)0);
+ 
+         return str[i++];
+     }
+@@ -478,7 +480,7 @@ struct JsonParser final {
+     string parse_string() {
+         string out;
+         long last_escaped_codepoint = -1;
+-        for (;;) {
++        while (true) {
+             if (i == str.size())
+                 return fail("unexpected end of input in string", "");
+ 
+@@ -515,7 +517,7 @@ struct JsonParser final {
+                 if (esc.length() < 4) {
+                     return fail("bad \\u escape: " + esc, "");
+                 }
+-                for (int j = 0; j < 4; j++) {
++                for (size_t j = 0; j < 4; j++) {
+                     if (!in_range(esc[j], 'a', 'f') && !in_range(esc[j], 'A', 'F')
+                             && !in_range(esc[j], '0', '9'))
+                         return fail("bad \\u escape: " + esc, "");
+@@ -671,7 +673,7 @@ struct JsonParser final {
+             if (ch == '}')
+                 return data;
+ 
+-            for (;;) {
++            while (1) {
+                 if (ch != '"')
+                     return fail("expected '\"' in object, got " + esc(ch));
+ 
+@@ -704,7 +706,7 @@ struct JsonParser final {
+             if (ch == ']')
+                 return data;
+ 
+-            for (;;) {
++            while (1) {
+                 i--;
+                 data.push_back(parse_json(depth + 1));
+                 if (failed)
+@@ -733,6 +735,8 @@ Json Json::parse(const string &in, string &err, JsonParse strategy) {
+ 
+     // Check for any trailing garbage
+     parser.consume_garbage();
++    if (parser.failed)
++        return Json();
+     if (parser.i != in.size())
+         return parser.fail("unexpected trailing " + esc(in[parser.i]));
+ 
+@@ -749,10 +753,14 @@ vector<Json> Json::parse_multi(const string &in,
+     vector<Json> json_vec;
+     while (parser.i != in.size() && !parser.failed) {
+         json_vec.push_back(parser.parse_json(0));
++        if (parser.failed)
++            break;
++
+         // Check for another object
+         parser.consume_garbage();
+-        if (!parser.failed)
+-            parser_stop_pos = parser.i;
++        if (parser.failed)
++            break;
++        parser_stop_pos = parser.i;
+     }
+     return json_vec;
+ }
+@@ -776,11 +784,5 @@ bool Json::has_shape(const shape & types, string & err) const {
+ 
+     return true;
+ }
+-//void Json::add(std::string &key, std::string value)
+-//{
+-//    (*m_ptr)[key] = value;
+-//}
+-
+-} // namespace json11
+-
+ 
++} // namespace json11
+\ No newline at end of file
+diff --git a/source/dynamicHDR10/json11/json11.h b/source/dynamicHDR10/json11/json11.h
+index 1f749c0..965388a 100644
+--- a/source/dynamicHDR10/json11/json11.h
++++ b/source/dynamicHDR10/json11/json11.h
+@@ -76,7 +76,7 @@ enum JsonParse {
+ 
+ class JsonValue;
+ 
+-class Json  final{ //final
++class Json final {
+ public:
+     // Types
+     enum Type {
+@@ -100,7 +100,6 @@ public:
+     Json(array &&values);           // ARRAY
+     Json(const object &values);     // OBJECT
+     Json(object &&values);          // OBJECT
+-    void add(std::string &key, std::string value);
+ 
+     // Implicit constructor: anything with a to_json() function.
+     template <class T, class = decltype(&T::to_json)>
+@@ -108,14 +107,14 @@ public:
+ 
+     // Implicit constructor: map-like objects (std::map, std::unordered_map, etc)
+     template <class M, typename std::enable_if<
+-        std::is_constructible<std::string, typename M::key_type>::value
+-        && std::is_constructible<Json, typename M::mapped_type>::value,
++        std::is_constructible<std::string, decltype(std::declval<M>().begin()->first)>::value
++        && std::is_constructible<Json, decltype(std::declval<M>().begin()->second)>::value,
+             int>::type = 0>
+     Json(const M & m) : Json(object(m.begin(), m.end())) {}
+ 
+     // Implicit constructor: vector-like objects (std::list, std::vector, std::set, etc)
+     template <class V, typename std::enable_if<
+-        std::is_constructible<Json, typename V::value_type>::value,
++        std::is_constructible<Json, decltype(*std::declval<V>().begin())>::value,
+             int>::type = 0>
+     Json(const V & v) : Json(array(v.begin(), v.end())) {}
+ 
+@@ -133,7 +132,6 @@ public:
+     bool is_array()  const { return type() == ARRAY; }
+     bool is_object() const { return type() == OBJECT; }
+ 
+-
+     // Return the enclosed value if this is a number, 0 otherwise. Note that json11 does not
+     // distinguish between integer and non-integer numbers - number_value() and int_value()
+     // can both be applied to a NUMBER-typed object.
+@@ -229,7 +227,6 @@ protected:
+     virtual const Json::object &object_items() const;
+     virtual const Json &operator[](const std::string &key) const;
+     virtual ~JsonValue() {}
+-
+ };
+ 
+-} // namespace json11
++} // namespace json11
+\ No newline at end of file
+-- 
+2.17.2 (Apple Git-113)
+

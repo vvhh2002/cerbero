@@ -10,23 +10,27 @@ class Recipe(recipe.Recipe):
     btype = BuildType.CMAKE
     url = 'https://bitbucket.org/multicoreware/x265/downloads/x265_%(version)s.tar.gz'
     tarball_dirname = 'x265_%(version)s'
-    configure_options = ' -DENABLE_HDR10_PLUS=OFF -DHIGH_BIT_DEPTH=ON -DCMAKE_CXX_STANDARD=11 -DENABLE_ASSEMBLY=ON -DENABLE_SHARED=OFF '
     configure_tpl = "%(config-sh)s %(options)s ./source"
-    files_libs = ['libx265']
+    files_libs = ['libx265','libhdr10plus']
     files_bins = ['x265']
     files_devel = ['lib/pkgconfig/x265.pc', 'include/x265.h',
                    'include/x265_config.h']
+
+    patches = ['libx265/0001-update-to-newest-version.patch']
 
     def prepare(self):
         # clang x86-32 fails at generating proper asm PIC code
         # See bug https://bugzilla.gnome.org/show_bug.cgi?id=727079
         enable_asm = True
+        self.configure_options = ' -DENABLE_HDR10_PLUS=ON -DHIGH_BIT_DEPTH=ON -DCMAKE_CXX_STANDARD=11 -DENABLE_ASSEMBLY=ON -DENABLE_SHARED=OFF '
         if self.config.target_platform == Platform.LINUX:
             self.configure_options += ' -DENABLE_LIBNUMA=ON'
         else:
             self.configure_options += ' -DENABLE_LIBNUMA=OFF'
 
-    def post_install(self):
-        libtool_la = LibtoolLibrary('x265', 148, None, None, self.config.libdir,
-                self.config.target_platform)
-        libtool_la.save()
+        self.configure_options += ' -DCMAKE_INSTALL_PREFIX:PATH=%s' % self.config.prefix
+
+    # def post_install(self):
+    #     libtool_la = LibtoolLibrary('x265', 148, None, None, self.config.libdir,
+    #             self.config.target_platform)
+    #     libtool_la.save()
