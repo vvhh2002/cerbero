@@ -44,10 +44,6 @@ class Recipe(recipe.Recipe):
                 self.configure_options += " --uname=" + self.config.host
 
         self.append_env['CFLAGS'] = ' -fPIC '
-        if self.config.target_arch == Architecture.X86_64:
-            self.configure_options += " -64 "
-        elif self.config.target_arch == Architecture.ARM64:
-            self.configure_options += " -64 "
 
     def post_install(self):
         # libtool_la = LibtoolLibrary('z', 1, 2, 11, self.config.libdir,
