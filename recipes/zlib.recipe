@@ -25,8 +25,8 @@ class Recipe(recipe.Recipe):
     def prepare(self):
         if self.config.target_platform == Platform.WINDOWS:
             self.make = 'make -f win32/Makefile.gcc PREFIX=%s- ' % self.config.host
-            self.make_install = 'make install -f win32/Makefile.gcc '\
-                                'INCLUDE_PATH=%(prefix)s/include '\
+            self.make_install = 'make install -f win32/Makefile.gcc ' \
+                                'INCLUDE_PATH=%(prefix)s/include ' \
                                 'LIBRARY_PATH=%(prefix)s/lib ' \
                                 'BINARY_PATH=%(prefix)s/bin ' % {'prefix':self.config.prefix}
             self._remove_steps ([BuildSteps.CONFIGURE])
@@ -42,6 +42,12 @@ class Recipe(recipe.Recipe):
         elif self.config.target_platform == Platform.LINUX:
             if self.config.cross_compiling() and self.config.host:
                 self.configure_options += " --uname=" + self.config.host
+
+        self.append_env['CFLAGS'] = ' -fPIC '
+        if self.config.target_arch == Architecture.X86_64:
+            self.configure_options += " -64 "
+        elif self.config.target_arch == Architecture.ARM64:
+            self.configure_options += " -64 "
 
     def post_install(self):
         # libtool_la = LibtoolLibrary('z', 1, 2, 11, self.config.libdir,
