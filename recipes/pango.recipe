@@ -11,7 +11,7 @@ class Recipe(recipe.Recipe):
     licenses = [License.LGPLv2Plus]
     configure_options = '--with-included-modules --enable-static --disable-gtk-doc'
     deps = ['cairo', 'fontconfig', 'freetype', 'gtk-doc-lite', 'harfbuzz']
-
+    configure_options += ' --with-pic --disable-shared '
     files_libs = ['libpangocairo-1.0', 'libpango-1.0', 'libpangoft2-1.0']
     files_bins = ['pango-querymodules', 'pango-view']
     files_devel = ['include/pango-1.0',

@@ -65,7 +65,9 @@ class Recipe(recipe.Recipe):
 
         self.make = make + ' libraries'
         # `make install` also needs the exact same parameters as `make`
-        self.make_install = make + ' install'
+        # self.make_install = make + ' install'
+
+        self.make_install = make + ' install-static'
 
     def configure(self):
         if self.config.platform == Platform.WINDOWS:

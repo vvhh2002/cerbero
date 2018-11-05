@@ -18,6 +18,8 @@ class Recipe(recipe.Recipe):
     files_libs = ['libspandsp']
     files_devel = ['include/spandsp', 'include/spandsp.h', 'lib/pkgconfig/spandsp.pc']
 
+    configure_options = '--enable-static --with-pic --disable-shared '
+
     def prepare(self):
         # Workaround broken autoconf test in cross compilation
         if self.config.arch != self.config.target_arch or self.config.target_platform in (Platform.ANDROID, Platform.IOS):

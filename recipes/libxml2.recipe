@@ -14,6 +14,7 @@ class Recipe(recipe.Recipe):
     files_libs = ['libxml2']
     files_devel = ['include/libxml2', 'lib/xml2Conf.sh', 'bin/xml2-config',
                    'lib/pkgconfig/libxml-2.0.pc', 'bin/xmllint%(bext)s']
+    configure_options = '--enable-static --with-pic --disable-shared '
 
     def prepare(self):
         if self.config.target_platform == Platform.WINDOWS:

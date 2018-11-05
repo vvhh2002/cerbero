@@ -12,7 +12,7 @@ class Recipe(recipe.Recipe):
     autoreconf = True
     files_libs = ['libmms']
     files_devel = ['include/libmms', 'lib/pkgconfig/libmms.pc']
-
+    configure_options = '--enable-static --with-pic --disable-shared '
     def prepare(self):
         if self.config.target_platform == Platform.ANDROID:
             self.append_env = {'LDFLAGS': '-liconv'}

@@ -10,7 +10,12 @@ class Recipe(recipe.Recipe):
     licenses = [License.LGPLv2_1]
     autoreconf = True
     autoreconf_sh = 'NOCONFIGURE=1 ./autogen.sh'
+
+
+    # configure_tpl = "%(config-sh)s --prefix %(prefix)s %(options)s"
+
     deps = ['glib', 'libpng', 'zlib', 'pixman', 'fontconfig', 'freetype']
+
     patches = ['cairo/0001-Fix-compilation-with-Android-s-bionic-libc.patch',
                'cairo/0001-Disable-building-of-the-tests.patch',
                ]
@@ -28,6 +33,7 @@ class Recipe(recipe.Recipe):
         'include/cairo',
         ]
     platform_files_devel = {
+
         Platform.WINDOWS: [ 'lib/pkgconfig/cairo-win32-font.pc',
                             'lib/pkgconfig/cairo-win32.pc'],
         Platform.DARWIN: ['lib/pkgconfig/cairo-quartz-font.pc',
@@ -39,6 +45,7 @@ class Recipe(recipe.Recipe):
     make_check = None
 
     def prepare(self):
+        # self.config_sh = 'PKG_CONFIG_PATH=%s ./configure' % os.path.join(self.config.prefix, 'lib/pkgconfig')
         # extra flags needed for gcc 4.9
         if self.config.target_distro == Distro.ARCH:
             self.append_env['CFLAGS'] = " -fno-lto "
@@ -60,3 +67,6 @@ class Recipe(recipe.Recipe):
                 # because we don't use clang and we use a platform < 21 (Lollipop)
                 # See $NDK_ROOT/sysroot/usr/include/sys/mman.h as one example
                 self.new_env['ac_cv_func_mmap'] = 'no'
+        # self.new_env['ac_cv_env_PKG_CONFIG_PATH_set'] = 'set'
+        # self.new_env['ac_cv_env_PKG_CONFIG_PATH_value'] = os.path.join(self.config.prefix, 'lib/pkgconfig')
+        self.configure_options += ' --enable-static --with-pic --disable-shared '

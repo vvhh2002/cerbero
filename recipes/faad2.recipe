@@ -6,6 +6,7 @@ class Recipe(recipe.Recipe):
     licenses = [License.GPLv2Plus]
     stype = SourceType.TARBALL
     url = 'http://sourceforge.net/projects/faac/files/faad2-src/faad2-2.7/faad2-2.7.tar.bz2'
+    configure_options = '--with-pic --disable-shared'
     patches = ['faad2/0001-Fix-redefinition-of-off_t.patch',
                'faad2/0002-Add-no-undefined-on-windows.patch']
     autoreconf = True

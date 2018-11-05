@@ -9,6 +9,7 @@ class Recipe(recipe.Recipe):
     files_libs = ['libsbc']
     files_devel = ['include/sbc/sbc.h', 'lib/pkgconfig/sbc.pc']
     configure_options = '--disable-tester --disable-tools'
+    configure_options += ' --enable-static --with-pic --disable-shared '
     patches = ['sbc/0001-sbc-Use-stdint.h.patch',
     	       'sbc/0002-Don-t-use-NEON-with-aarch64-on-Clang.patch']
 

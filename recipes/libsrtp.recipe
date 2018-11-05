@@ -11,7 +11,7 @@ class Recipe(recipe.Recipe):
     url = 'https://github.com/cisco/%(name)s/archive/v%(version)s.tar.gz'
     licenses = [License.BSD_like]
     patches = ['libsrtp/0001-Don-t-create-a-symlink-if-there-is-no-SHAREDLIBVERSI.patch']
-
+    configure_options = '--enable-static --with-pic --disable-shared '
     files_libs = ['libsrtp']
     files_devel = ['include/srtp', 'lib/pkgconfig/libsrtp.pc']
 

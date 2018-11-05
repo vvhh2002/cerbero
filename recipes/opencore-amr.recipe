@@ -9,6 +9,8 @@ class Recipe(recipe.Recipe):
     licenses = [License.Apachev2]
     patches = ['opencore-amr/0001-Fix-include-dir-in-pc-files.patch']
 
+    configure_options = '--enable-static --with-pic --disable-shared '
+
     files_libs = ['libopencore-amrnb', 'libopencore-amrwb']
     files_devel = ['include/opencore-amrwb', 'include/opencore-amrnb',
         'lib/pkgconfig/opencore-amrwb.pc', 'lib/pkgconfig/opencore-amrnb.pc']

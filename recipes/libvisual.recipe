@@ -9,6 +9,7 @@ class Recipe(recipe.Recipe):
     licenses = [License.LGPLv2_1Plus]
     autoreconf = True
     configure_options = ' --enable-static'
+    configure_options += ' --with-pic --disable-shared '
     patches = ['libvisual/0001-Check-properly-for-sched_setshceduler.patch',
                'libvisual/0003-Add-long-long-check-for-win64.patch',
                'libvisual/0005-Fix-compilation-in-win64.patch',

@@ -9,6 +9,8 @@ class Recipe(recipe.Recipe):
     patches = ['libdca/0001-Disable-AC_C_ALWAYS_INLINE.patch']
     autoreconf = True
 
+    configure_options = '--enable-static --with-pic --disable-shared '
+
     files_libs = ['libdca']
     files_bins = ['extract_dca', 'extract_dcs', 'dcadec', 'dcsdec']
     files_devel = ['include/dca.h', 'include/dts.h',

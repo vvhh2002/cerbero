@@ -41,6 +41,8 @@ class Recipe(recipe.Recipe):
     files_libs = ['libwebrtc_audio_processing']
     files_devel = ['include/webrtc_audio_processing', 'lib/pkgconfig/webrtc-audio-processing.pc']
 
+    configure_options = '--enable-static --with-pic --disable-shared '
+
     def prepare(self):
         if self.config.target_platform == Platform.ANDROID:
             # TODO add --enable-neon=runtime, there is a conflict with cerbero

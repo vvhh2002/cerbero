@@ -3,13 +3,13 @@
 
 class Recipe(recipe.Recipe):
     name = 'speex'
-    version = '1.2rc2'
+    version = '1.2.0'
     stype = SourceType.TARBALL
-    url = 'http://downloads.xiph.org/releases/speex/speex-1.2rc2.tar.gz'
+    url = 'http://downloads.xiph.org/releases/speex/speex-1.2.0.tar.gz'
     licenses = [License.BSD_like]
     deps = ['libogg']
     allow_parallel_build = False
-
+    configure_options = '--enable-static --with-pic --disable-shared '
     files_libs = ['libspeex']
     files_bins = ['speexdec', 'speexenc']
     files_devel = ['include/speex', 'lib/pkgconfig/speex.pc']

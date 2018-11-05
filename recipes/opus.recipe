@@ -10,6 +10,8 @@ class Recipe(recipe.Recipe):
 
     patches = ['opus/0001-celt-Force-stack-alignment-for-functions-using-__m12.patch']
 
+    configure_options = '--enable-static --with-pic --disable-shared '
+
     files_libs = ['libopus']
     files_devel = ['include/opus', 'lib/pkgconfig/opus.pc']
     # Starting with v1.1, Opus has special ARM assembly optimizations when

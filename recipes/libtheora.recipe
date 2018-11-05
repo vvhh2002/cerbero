@@ -22,6 +22,8 @@ class Recipe(recipe.Recipe):
     files_devel = ['include/theora', 'lib/pkgconfig/theora.pc',
                    'lib/pkgconfig/theoraenc.pc', 'lib/pkgconfig/theoradec.pc']
 
+    configure_options += '--enable-static --with-pic --disable-shared '
+
     def prepare(self):
         if self.config.target_platform == Platform.ANDROID:
             self.configure_options += ' --disable-examples'

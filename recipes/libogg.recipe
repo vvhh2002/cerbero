@@ -13,6 +13,7 @@ class Recipe(recipe.Recipe):
 
     files_libs = ['libogg']
     files_devel = ['include/ogg', 'lib/pkgconfig/ogg.pc', 'share/aclocal/ogg.m4']
+    configure_options = '--enable-static --with-pic --disable-shared '
 
     def configure(self):
         if self.config.target_platform == Platform.IOS:

@@ -11,7 +11,7 @@ class Recipe(recipe.Recipe):
     make_check = None
     autoreconf = True
     patches = ['libass/0001-define-IID_Unknown.patch']
-
+    configure_options = '--enable-static --with-pic --disable-shared '
     files_libs = ['libass']
     files_devel = ['include/ass', 'lib/pkgconfig/libass.pc']
 

@@ -26,12 +26,14 @@ class Recipe(recipe.Recipe):
     files_devel = ['include/soundtouch', 'lib/pkgconfig/soundtouch.pc']
 
     def prepare (self):
-      self.configure_options += ' --enable-static '
-      if self.config.target_platform == Platform.ANDROID:
-        self.configure_options += ' --with-gnustl '
-        self.append_env['CXXFLAGS'] = " -fexceptions "
-      elif self.config.target_platform == Platform.IOS:
-        self.autoreconf = True
+        self.configure_options += ' --enable-static '
+        if self.config.target_platform == Platform.ANDROID:
+            self.configure_options += ' --with-gnustl '
+            self.append_env['CXXFLAGS'] = " -fexceptions "
+        elif self.config.target_platform == Platform.IOS:
+            self.autoreconf = True
+
+        self.configure_options += ' --with-pic --disable-shared '
 
     def configure (self):
         fix_android_ndk16_cxx (self.config, os.path.join(self.make_dir, 'source', 'SoundTouch'))

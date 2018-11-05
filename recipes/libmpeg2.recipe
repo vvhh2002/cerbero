@@ -15,7 +15,7 @@ class Recipe(recipe.Recipe):
     files_bins = ['mpeg2dec', 'extract_mpeg2', 'corrupt_mpeg2']
     files_devel = ['include/mpeg2dec', 'lib/pkgconfig/libmpeg2.pc',
                    'lib/pkgconfig/libmpeg2convert.pc']
-
+    configure_options = '--enable-static --with-pic --disable-shared '
     def prepare(self):
         if self.config.variants.nox11:
             self.configure_options += ' --without-x '

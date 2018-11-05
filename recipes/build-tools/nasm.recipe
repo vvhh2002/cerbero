@@ -1,0 +1,17 @@
+# -*- Mode: Python -*- vi:si:et:sw=4:sts=4:ts=4:syntax=python
+
+class Recipe(recipe.Recipe):
+    name = 'nasm'
+    version = '2.13.03'
+    licenses = [License.GPLv3]
+    stype = SourceType.TARBALL
+    # config_sh = 'sh ./autogen.sh --noconfigure && ./configure '
+    configure_tpl = "%(config-sh)s --prefix=%(prefix)s " \
+                    "--libdir=%(libdir)s"
+    url = 'https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.gz'
+    # autoreconf = True
+    files_bins = ['nasm']
+
+    def prepare(self):
+        if self.config.target_platform == Platform.WINDOWS:
+            self.append_env['LDFLAGS'] = '-lintl'

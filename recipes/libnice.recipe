@@ -11,6 +11,8 @@ class Recipe(recipe.Recipe):
             --enable-compile-warnings=maximum --disable-gtk-doc'
     deps = ['glib', 'gtk-doc-lite', 'gstreamer-1.0']
     autoreconf = True
+
+    configure_options += ' --with-pic --disable-shared '
     patches = [
         "libnice/0001-Fix-build-with-android-NDK-r16.patch",
         "libnice/0001-nicesrc-spin-the-agent-mainloop-in-a-separate-thread.patch",

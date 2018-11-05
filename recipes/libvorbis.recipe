@@ -10,6 +10,8 @@ class Recipe(recipe.Recipe):
     licenses = [License.BSD_like]
     deps = ['libogg']
     config_sh = 'rm ltmain.sh && sh autogen.sh'
+
+    configure_options = '--enable-static --with-pic --disable-shared '
     patches = ['libvorbis/0001-Fix-linking-on-Android.patch',
                'libvorbis/0003-Link-the-other-libs-with-lm-too.patch',
                'libvorbis/0004-configure-check-for-endianness.patch',

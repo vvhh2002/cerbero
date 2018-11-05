@@ -8,6 +8,7 @@ class Recipe(recipe.Recipe):
     licenses = [License.LGPLv2_1]
     autoreconf = True
     configure_options = '--with-audio=dummy --enable-static'
+    configure_options += ' --with-pic --disable-shared '
     patches = ['mpg123/0001-Disable-tools-and-libout123-library.patch']
 
     files_libs = ['libmpg123']
