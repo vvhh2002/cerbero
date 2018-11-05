@@ -3,7 +3,7 @@ from cerbero.tools.libtool import LibtoolLibrary
 
 
 class Recipe(recipe.Recipe):
-    version = '20161218-2245'
+    version = '20181103-2245'
     name = 'x264'
     licenses = [License.GPL]
     stype = SourceType.TARBALL
