@@ -1,15 +1,16 @@
 # -*- Mode: Python -*- vi:si:et:sw=4:sts=4:ts=4:syntax=python
 import shutil
+import os
 from cerbero.utils import fix_android_ndk16_cxx
 from cerbero.build.recipe import BuildSteps
 from cerbero.errors import FatalError
-
+from cerbero.utils.messages import message
 
 class Recipe(custom.GStreamer):
     name = 'gstreamer-egl-1.0'
     config_sh = 'sh ./autogen.sh --noconfigure && ./configure'
     configure_options = '--enable-static --disable-introspection --disable-examples'
-    url = '../nvidia_l2t_28.2.1/gstegl_src.tbz2'
+    url = '../../nvidia_l2t_28.2.1/gstegl_src.tbz2'
     tarball_name = 'gstegl_src.tbz2'
     stype = SourceType.TARBALL
     deps = ['gstreamer-1.0', 'gst-plugins-base-1.0']
@@ -44,7 +45,13 @@ class Recipe(custom.GStreamer):
 
     def prepare(self):
         self._steps = self._steps[1:] #remove fetch step
-        shutil.copy(self.url, self.download_path)
+        if os.path.isfile(self.url):
+            message("cwd %s copy " % os.getcwd())
+            shutil.copy(self.url, self.download_path)
+        else:
+            FatalError("can't find from url:%s %s" % (self.url, os.getcwd()))
+
+
         self.append_env['CFLAGS'] = " -Wno-error "
         self.append_env['OBJCFLAGS'] = " -Wno-error "
         self.append_env['CXXFLAGS'] = " -Wno-error "
