@@ -7,7 +7,7 @@ class Recipe(recipe.Recipe):
     stype = SourceType.TARBALL
     url = 'http://www.soft-switch.org/downloads/spandsp/spandsp-0.0.6.tar.gz'
     licenses = [License.LGPLv2_1Plus]
-    deps = ['tiff']
+    # deps = ['tiff']
     allow_parallel_build = False
 
     config_sh = 'sh ./autogen.sh && sh ./configure'
@@ -19,7 +19,7 @@ class Recipe(recipe.Recipe):
     files_libs = ['libspandsp']
     files_devel = ['include/spandsp', 'include/spandsp.h', 'lib/pkgconfig/spandsp.pc']
 
-    configure_options = '--enable-static --with-pic --disable-shared '
+    configure_options = ' --enable-builtin-tiff --enable-static --with-pic --disable-shared '
 
     def prepare(self):
         # Workaround broken autoconf test in cross compilation
