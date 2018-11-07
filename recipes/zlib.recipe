@@ -1,5 +1,5 @@
 # -*- Mode: Python -*- vi:si:et:sw=4:sts=4:ts=4:syntax=python
-from cerbero.tools.libtool import LibtoolLibrary
+from cerbero.tools.libtool import StaticLibtoolLibrary
 
 
 class Recipe(recipe.Recipe):
@@ -46,9 +46,9 @@ class Recipe(recipe.Recipe):
         self.append_env['CFLAGS'] = ' -fPIC '
 
     def post_install(self):
-        # libtool_la = LibtoolLibrary('z', 1, 2, 11, self.config.libdir,
-        #         self.config.target_platform)
-        # libtool_la.save()
+        libtool_la = StaticLibtoolLibrary('z', 1, 2, 11, self.config.libdir,
+                self.config.target_platform)
+        libtool_la.save()
         # FIXME This is to workaround a build issue trying to ld to libz.so
         if self.config.target_platform == Platform.IOS:
             try:
