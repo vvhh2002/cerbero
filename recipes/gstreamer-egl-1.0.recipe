@@ -32,17 +32,19 @@ class Recipe(custom.GStreamer):
         ],
     }
 
-    def _do_step(self, step):
-        if step in BuildSteps.FETCH:
-            stepfunc = getattr(self._recipes.values()[0], step)
-            try:
-                # stepfunc()
-                shutil.copy(self.url, self.download_path)
-            except FatalError, e:
-                raise e
-            return
+    # def _do_step(self, step):
+    #     if step in BuildSteps.FETCH:
+    #         stepfunc = getattr(self._recipes.values()[0], step)
+    #         try:
+    #             # stepfunc()
+    #             shutil.copy(self.url, self.download_path)
+    #         except FatalError, e:
+    #             raise e
+    #         return
 
     def prepare(self):
+        self._steps = self._steps[1:] #remove fetch step
+        shutil.copy(self.url, self.download_path)
         self.append_env['CFLAGS'] = " -Wno-error "
         self.append_env['OBJCFLAGS'] = " -Wno-error "
         self.append_env['CXXFLAGS'] = " -Wno-error "
