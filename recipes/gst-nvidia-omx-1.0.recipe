@@ -8,11 +8,14 @@ class Recipe(custom.GStreamer):
     # TODO - check license - plugin is certainly LGPLv2+, but need to check
     #        the linked libs
     licenses = [License.Proprietary]
-    config_sh = 'sh ./autogen.sh --noconfigure && ./configure'
-    configure_options = "--disable-examples --enable-static "
-    url = 'file://../nvidia_l2t_28.2.1/gstomx1_src.tbz2'
-    stype = SourceType.TARBALL
-    deps = ['gstreamer-1.0', 'gst-plugins-base-1.0']
+
+    config_sh = 'sh ./autogen.sh --noconfigure && \
+     GST_EGL_LIBS="-lgstnvegl-1.0 -lEGL -lX11 -lgstreamer-1.0 -lgobject-2.0 -lglib-2.0" ./configure'
+    configure_options = "--with-omx-target=tegra --disable-examples --enable-static "
+
+    url = '../nvidia_l2t_28.2.1/gst-nvidia-omx-1.0.tar.gz'
+    stype = SourceType.FILE_TARBALL
+    deps = ['gstreamer-1.0', 'gst-plugins-base-1.0','gstreamer-egl-1.0']
 
     files_libs = ['libgstomx']
 

@@ -9,6 +9,7 @@ from cerbero.utils.messages import message
 class Recipe(custom.GStreamer):
     name = 'gstreamer-egl-1.0'
     config_sh = 'sh ./autogen.sh --noconfigure && ./configure'
+
     configure_options = '--enable-static --disable-introspection --disable-examples'
     url = '../nvidia_l2t_28.2.1/gstegl_src.tar.gz'
     tarball_name = 'gstegl_src.tar.gz'
